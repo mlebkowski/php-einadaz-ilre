@@ -1,20 +1,23 @@
 <?php
-declare(strict_types=1);    
 
-function getAndExhaust(\Generator $generator): array | null {
+declare(strict_types=1);
+
+function getAndExhaust(Iterator $generator): array|null
+{
     $current = $generator->current();
     $generator->next();
     return $current;
 }
-    
-function createMissingReport(\Generator $alpha, \Generator $bravo): array {
+
+function createMissingReport(Iterator $alpha, Iterator $bravo): array
+{
     if ($alpha->current()['id'] < $bravo->current()['id']) {
         return [getAndExhaust($alpha), null];
     }
     return [null, getAndExhaust($bravo)];
 }
-    
-function getDifferingPairs(\Iterator $cursorAlpha, \Iterator $cursorBravo): \Generator
+
+function getDifferingPairs(Iterator $cursorAlpha, Iterator $cursorBravo): Generator
 {
     // We will advance the two cursor simultaneously, and the algorithm
     // will decide which one to move, and which to keep. We can illustrate
@@ -51,7 +54,7 @@ function getDifferingPairs(\Iterator $cursorAlpha, \Iterator $cursorBravo): \Gen
         //       | ...     | ...     | 
         //    -> | [...]   | ...     | 
         //       | ...     | ...     | 
-        
+
         $alphaValue = $cursorAlpha->current();
         $bravoValue = $cursorBravo->current();
 
@@ -69,7 +72,7 @@ function getDifferingPairs(\Iterator $cursorAlpha, \Iterator $cursorBravo): \Gen
             // we use continue, but easily we could’ve used `else`
             continue;
         }
-        
+
         // there are two remaining scenarios. in both of them the IDs are equal,
         // but in one of them the details differ. only then do we yield
         //       | Alpha   | Bravo   |
@@ -86,8 +89,7 @@ function getDifferingPairs(\Iterator $cursorAlpha, \Iterator $cursorBravo): \Gen
         // regardless of the differences, we advance both cursors
         $cursorAlpha->next();
         $cursorBravo->next();
-        
-    // work until both generators yielded all records
+        // work until both generators yielded all records
     } while ($cursorBravo->valid() || $cursorAlpha->valid());
 }
     

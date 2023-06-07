@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/src/getDifferingPairs.php';
 
 ini_set('memory_limit', '10M');
@@ -15,7 +16,7 @@ $cursor = getDifferingPairs(getLines('1'), getLines('2'));
 foreach ($cursor as [$product1, $product2]) {
     if ($product1 && $product2) {
         echo "{$product1['id']} jest różne \n";
-    } else if ($product1) {
+    } elseif ($product1) {
         echo "{$product1['id']} jest tylko w pierwszym\n";
     } else {
         echo "{$product2['id']} jest tylko w drugim\n";
